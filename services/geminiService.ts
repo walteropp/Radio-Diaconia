@@ -1,12 +1,24 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize AI client with mandatory API key from environment
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Lazy-load AI client at runtime to ensure API key is available
+let ai: any = null;
+
+const getAIClient = () => {
+  if (!ai) {
+    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY environment variable is not set");
+    }
+    ai = new GoogleGenAI({ apiKey });
+  }
+  return ai;
+};
 
 export const getSpiritualGuidance = async (message: string) => {
   try {
-    const response = await ai.models.generateContent({
+    const aiClient = getAIClient();
+    const response = await aiClient.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: message,
       config: {
@@ -27,7 +39,8 @@ export const getSpiritualGuidance = async (message: string) => {
 
 export const generateDailyVerse = async () => {
   try {
-    const response = await ai.models.generateContent({
+    const aiClient = getAIClient();
+    const response = await aiClient.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: 'Dame un versículo bíblico de esperanza y una breve reflexión para hoy que resuene con el espíritu de servicio y diaconía.',
       config: {
