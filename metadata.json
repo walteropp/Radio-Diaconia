@@ -1,0 +1,7 @@
+{
+  "name": "Radio Diaconía San Romero",
+  "description": "Streaming de fe y esperanza inspirado en el legado de San Arnulfo Romero. Radio católica con asistencia espiritual IA.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
